@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOSKO — Helping businesses look premium online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --white: #f0ede8;
+    --gold: #f0a500;
+    --gold-dim: rgba(240,165,0,0.12);
+    --muted: rgba(240,237,232,0.38);
+    --border: rgba(240,237,232,0.1);
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    font-weight: 400;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* CUSTOM CURSOR */
+  #cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .2s, height .2s, background .2s;
+    mix-blend-mode: normal;
+  }
+  #cursor.big {
+    width: 36px; height: 36px;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 3.5rem;
+    mix-blend-mode: normal;
+  }
+  nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, var(--black) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    position: relative;
+  }
+  .nav-links a {
+    font-size: .72rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* HERO — THE SILENCE */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-line {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 1px;
+    height: 60vh;
+    background: linear-gradient(to bottom, transparent, var(--border), transparent);
+    pointer-events: none;
+  }
+  .hero-tagline {
+    font-size: .68rem;
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp .9s .3s forwards;
+  }
+  .hero-headline {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 9vw, 8.5rem);
+    font-weight: 900;
+    line-height: .95;
+    letter-spacing: -.02em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s .5s forwards;
+    margin-bottom: 1.5rem;
+  }
+  .hero-result {
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 3.5rem;
+  }
+  .result-text {
+    font-size: .78rem;
+    letter-spacing: .15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp .8s .8s forwards;
+    transition: opacity .4s;
+  }
+  .result-text span { color: var(--white); font-weight: 500; }
+  .hero-cta {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp .8s 1.1s forwards;
+  }
+  .btn-primary {
+    padding: .85rem 2.4rem;
+    background: var(--gold);
+    color: #080808;
+    font-family: var(--sans);
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    border: none;
+    cursor: none;
+    transition: transform .25s, box-shadow .25s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(240,165,0,.3); }
+  .btn-ghost {
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: color .3s, border-color .3s;
+  }
+  .btn-ghost:hover { color: var(--white); border-color: rgba(240,237,232,.4); }
+
+  /* TICKER */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 0;
+    margin: 0;
+  }
+  .ticker {
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+    animation: ticker 22s linear infinite;
+  }
+  .ticker-item {
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--muted);
+    padding: 0 3rem;
+  }
+  .ticker-item .dot { color: var(--gold); margin-left: 3rem; }
+
+  /* GRADER SECTION */
+  #grader {
+    padding: 8rem 3.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-eyebrow {
+    font-size: .68rem;
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .section-headline {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    margin-bottom: 1rem;
+    color: var(--white);
+  }
+  .section-sub {
+    font-size: .9rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 3.5rem;
+    max-width: 520px;
+  }
+  .grader-input-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    transition: border-color .3s;
+    margin-bottom: 2.5rem;
+  }
+  .grader-input-row:focus-within { border-color: var(--gold); }
+  #url-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--sans);
+    font-size: .95rem;
+    color: var(--white);
+    padding: 1.1rem 1.4rem;
+    letter-spacing: .04em;
+  }
+  #url-input::placeholder { color: var(--muted); }
+  #grade-btn {
+    background: var(--gold);
+    border: none;
+    color: #080808;
+    font-family: var(--sans);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 0 2rem;
+    cursor: none;
+    transition: opacity .2s;
+  }
+  #grade-btn:hover { opacity: .85; }
+
+  .grader-results { display: none; }
+  .grader-results.visible { display: block; }
+
+  .scores-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5px;
+    background: var(--border);
+    margin-bottom: 1.5px;
+  }
+  .score-card {
+    background: var(--black);
+    padding: 2rem 1.8rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    width: 0;
+    transition: width 1.2s cubic-bezier(.16,1,.3,1);
+  }
+  .score-card.animated::before { width: var(--pct); }
+  .score-label {
+    font-size: .65rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .score-number {
+    font-family: var(--serif);
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--white);
+  }
+  .score-number.bad { color: #e05a5a; }
+  .score-number.ok { color: #e0c96a; }
+  .score-number.good { color: var(--gold); }
+  .score-verdict {
+    font-size: .75rem;
+    color: var(--muted);
+    margin-top: .6rem;
+    line-height: 1.6;
+  }
+  .overall-score {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 2.5rem 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .overall-left .label {
+    font-size: .65rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .6rem;
+    display: block;
+  }
+  .overall-big {
+    font-family: var(--serif);
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--white);
+  }
+  .overall-right {
+    text-align: right;
+    flex: 1;
+  }
+  .overall-verdict {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--white);
+    margin-bottom: .5rem;
+  }
+  .overall-text {
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 320px;
+    margin-left: auto;
+  }
+  .cta-after-grade {
+    margin-top: 1.5rem;
+    text-align: center;
+    padding: 2.5rem;
+    border: 1px solid var(--gold-dim);
+  }
+  .cta-after-grade p {
+    font-size: .8rem;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    line-height: 1.7;
+  }
+  .cta-after-grade strong { color: var(--white); }
+
+  /* WORK SECTION */
+  #work {
+    padding: 8rem 3.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .work-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+  }
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: var(--border);
+  }
+  .work-card {
+    background: var(--black);
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    position: relative;
+    cursor: none;
+  }
+  .work-card-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(8,8,8,.9) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  .work-card:hover .work-card-inner { opacity: 1; }
+  .work-card-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform .6s cubic-bezier(.16,1,.3,1);
+  }
+  .work-card:hover .work-card-bg { transform: scale(1.04); }
+  .work-tag {
+    font-size: .6rem;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: .5rem;
+    display: block;
+  }
+  .work-name {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  /* Placeholder cards with geometric art */
+  .placeholder-1 { background: #0d0d12; }
+  .p1-art { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+  /* STATS */
+  #stats {
+    padding: 6rem 3.5rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    max-width: 100%;
+  }
+  .stat {
+    padding: 3rem 3.5rem;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: .5rem;
+  }
+  .stat-number span { color: var(--gold); }
+  .stat-label {
+    font-size: .72rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* PROCESS */
+  #process {
+    padding: 8rem 3.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .process-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .7s, transform .7s;
+  }
+  .process-item.in { opacity: 1; transform: none; }
+  .process-num {
+    font-family: var(--serif);
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--border);
+    line-height: 1;
+    padding-top: .2rem;
+  }
+  .process-title {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: .8rem;
+    color: var(--white);
+  }
+  .process-text {
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
+  /* CTA FINAL */
+  #contact {
+    padding: 10rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(240,165,0,.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .contact-headline {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 7vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+  }
+  .contact-sub {
+    font-size: .88rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+  .contact-email-row {
+    display: flex;
+    gap: 0;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+    border: 1px solid var(--border);
+    transition: border-color .3s;
+  }
+  .contact-email-row:focus-within { border-color: var(--gold); }
+  #email-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--sans);
+    font-size: .9rem;
+    color: var(--white);
+    padding: 1rem 1.3rem;
+  }
+  #email-input::placeholder { color: var(--muted); }
+  #send-btn {
+    background: var(--gold);
+    border: none;
+    color: #080808;
+    font-family: var(--sans);
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: 0 1.8rem;
+    cursor: none;
+    transition: opacity .2s;
+  }
+  #send-btn:hover { opacity: .85; }
+
+  /* FOOTER */
+  footer {
+    padding: 2.5rem 3.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .footer-copy {
+    font-size: .65rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* LOADING */
+  .loading-dots {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    margin-left: 8px;
+  }
+  .loading-dots span {
+    width: 4px; height: 4px;
+    background: #080808;
+    border-radius: 50%;
+    animation: dot .9s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: .15s; }
+  .loading-dots span:nth-child(3) { animation-delay: .3s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes dot {
+    0%,80%,100% { transform: scale(0.6); opacity: .4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* MOBILE */
+  @media(max-width: 768px) {
+    nav { padding: 1.5rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero { padding: 7rem 1.5rem 4rem; }
+    #grader, #work, #process { padding: 5rem 1.5rem; }
+    .scores-grid { grid-template-columns: 1fr; }
+    .work-grid { grid-template-columns: 1fr; }
+    #stats { grid-template-columns: 1fr; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .work-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .overall-score { flex-direction: column; text-align: left; }
+    .overall-right { text-align: left; }
+    .overall-text { margin-left: 0; }
+    #contact { padding: 6rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .contact-email-row { flex-direction: column; }
+    #send-btn { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">KOSKO</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#grader">Grade My Site</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO — THE SILENCE -->
+<section id="hero">
+  <div class="hero-bg-line"></div>
+  <span class="hero-tagline">Helping businesses look premium online</span>
+  <h1 class="hero-headline">KOSKO</h1>
+  <div class="hero-result">
+    <p class="result-text" id="result-line">
+      <span id="result-number"></span>&nbsp;<span id="result-desc"></span>
+    </p>
+  </div>
+  <div class="hero-cta">
+    <a href="#grader" class="btn-primary">Grade My Website</a>
+    <a href="#work" class="btn-ghost">See Our Work</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <span class="ticker-item">Premium<span class="dot">·</span></span>
+    <span class="ticker-item">Conversion-Focused<span class="dot">·</span></span>
+    <span class="ticker-item">Detail-Obsessed<span class="dot">·</span></span>
+    <span class="ticker-item">Fast<span class="dot">·</span></span>
+    <span class="ticker-item">Distinctive<span class="dot">·</span></span>
+    <span class="ticker-item">Memorable<span class="dot">·</span></span>
+    <span class="ticker-item">Strategic<span class="dot">·</span></span>
+    <span class="ticker-item">Refined<span class="dot">·</span></span>
+    <span class="ticker-item">Premium<span class="dot">·</span></span>
+    <span class="ticker-item">Conversion-Focused<span class="dot">·</span></span>
+    <span class="ticker-item">Detail-Obsessed<span class="dot">·</span></span>
+    <span class="ticker-item">Fast<span class="dot">·</span></span>
+    <span class="ticker-item">Distinctive<span class="dot">·</span></span>
+    <span class="ticker-item">Memorable<span class="dot">·</span></span>
+    <span class="ticker-item">Strategic<span class="dot">·</span></span>
+    <span class="ticker-item">Refined<span class="dot">·</span></span>
+  </div>
+</div>
+
+<!-- GRADER — THE SCORE -->
+<section id="grader">
+  <div class="reveal">
+    <span class="section-eyebrow">Free Audit</span>
+    <h2 class="section-headline">How does your<br>website score?</h2>
+    <p class="section-sub">Enter your URL. We'll give you a brutally honest grade across the four dimensions that determine whether your website wins business — or loses it.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="grader-input-row">
+      <input type="text" id="url-input" placeholder="yourwebsite.com" autocomplete="off" spellcheck="false">
+      <button id="grade-btn">Analyse &nbsp;→</button>
+    </div>
+  </div>
+
+  <div class="grader-results reveal" id="grader-results">
+    <div class="scores-grid">
+      <div class="score-card" id="card-design">
+        <span class="score-label">Visual Design</span>
+        <div class="score-number" id="score-design">—</div>
+        <div class="score-verdict" id="verdict-design"></div>
+      </div>
+      <div class="score-card" id="card-speed">
+        <span class="score-label">Speed & Performance</span>
+        <div class="score-number" id="score-speed">—</div>
+        <div class="score-verdict" id="verdict-speed"></div>
+      </div>
+      <div class="score-card" id="card-mobile">
+        <span class="score-label">Mobile Experience</span>
+        <div class="score-number" id="score-mobile">—</div>
+        <div class="score-verdict" id="verdict-mobile"></div>
+      </div>
+      <div class="score-card" id="card-brand">
+        <span class="score-label">Brand Presence</span>
+        <div class="score-number" id="score-brand">—</div>
+        <div class="score-verdict" id="verdict-brand"></div>
+      </div>
+    </div>
+    <div class="overall-score">
+      <div class="overall-left">
+        <span class="label">Overall Score</span>
+        <div class="overall-big" id="overall-score">—</div>
+      </div>
+      <div class="overall-right">
+        <div class="overall-verdict" id="overall-verdict"></div>
+        <p class="overall-text" id="overall-text"></p>
+      </div>
+    </div>
+    <div class="cta-after-grade">
+      <p id="grade-cta-text"></p>
+      <a href="#contact" class="btn-primary">Let's Fix This</a>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="work-header reveal">
+    <div>
+      <span class="section-eyebrow">Selected Work</span>
+      <h2 class="section-headline">Let the work<br>do the talking.</h2>
+    </div>
+    <a href="#contact" class="btn-ghost">Start a project →</a>
+  </div>
+  <div class="work-grid">
+    <!-- Card 1 -->
+    <div class="work-card" style="transition-delay:.05s">
+      <div class="work-card-bg" style="background: #0a0f1a;">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <circle cx="200" cy="250" r="160" fill="none" stroke="#1a2540" stroke-width="60"/>
+          <circle cx="200" cy="250" r="80" fill="none" stroke="#f0a500" stroke-width="1" opacity=".5"/>
+          <line x1="40" y1="250" x2="360" y2="250" stroke="#1a2540" stroke-width="1"/>
+          <line x1="200" y1="90" x2="200" y2="410" stroke="#1a2540" stroke-width="1"/>
+          <circle cx="200" cy="250" r="8" fill="#f0a500"/>
+          <text x="200" y="420" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#f0a500" letter-spacing="4" opacity=".7">AURORA</text>
+        </svg>
+      </div>
+      <div class="work-card-inner">
+        <span class="work-tag">E-commerce · Jewelry</span>
+        <div class="work-name">Aurora Jewels</div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="work-card" style="transition-delay:.12s">
+      <div class="work-card-bg" style="background: #080c08;">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <rect x="0" y="0" width="400" height="500" fill="#080c08"/>
+          <rect x="60" y="80" width="280" height="1" fill="#2a4020" opacity=".8"/>
+          <rect x="60" y="160" width="280" height="1" fill="#2a4020" opacity=".8"/>
+          <rect x="60" y="240" width="280" height="1" fill="#2a4020" opacity=".8"/>
+          <rect x="60" y="320" width="280" height="1" fill="#2a4020" opacity=".8"/>
+          <rect x="60" y="400" width="280" height="1" fill="#2a4020" opacity=".8"/>
+          <rect x="120" y="80" width="1" height="320" fill="#2a4020" opacity=".8"/>
+          <rect x="200" y="80" width="1" height="320" fill="#2a4020" opacity=".8"/>
+          <rect x="280" y="80" width="1" height="320" fill="#2a4020" opacity=".8"/>
+          <rect x="155" y="200" width="90" height="100" fill="none" stroke="#4a8040" stroke-width="1"/>
+          <circle cx="200" cy="250" r="30" fill="#3a6030" opacity=".6"/>
+          <circle cx="200" cy="250" r="10" fill="#7ec870"/>
+          <text x="200" y="430" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#7ec870" letter-spacing="5" opacity=".8">VERDANT</text>
+        </svg>
+      </div>
+      <div class="work-card-inner">
+        <span class="work-tag">Web App · Finance</span>
+        <div class="work-name">Verdant Capital</div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="work-card" style="transition-delay:.2s">
+      <div class="work-card-bg" style="background: #100a14;">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <polygon points="200,80 340,420 60,420" fill="none" stroke="#2a1a3a" stroke-width="40"/>
+          <polygon points="200,130 310,400 90,400" fill="none" stroke="#3a2050" stroke-width="2" opacity=".5"/>
+          <polygon points="200,180 280,380 120,380" fill="none" stroke="#f0a500" stroke-width="1" opacity=".3"/>
+          <circle cx="200" cy="270" r="20" fill="#7030c0" opacity=".8"/>
+          <text x="200" y="460" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#c070ff" letter-spacing="5" opacity=".8">PRISM</text>
+        </svg>
+      </div>
+      <div class="work-card-inner">
+        <span class="work-tag">Landing Page · SaaS</span>
+        <div class="work-name">Prism Analytics</div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="work-card" style="transition-delay:.05s">
+      <div class="work-card-bg" style="background: #0e0a08;">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <rect x="50" y="120" width="300" height="260" rx="0" fill="none" stroke="#2a1a08" stroke-width="60"/>
+          <rect x="50" y="120" width="300" height="260" rx="0" fill="none" stroke="#f0a500" stroke-width="1" opacity=".4"/>
+          <rect x="120" y="200" width="160" height="100" fill="#1a0e04" stroke="#f0a500" stroke-width=".5" opacity=".7"/>
+          <line x1="130" y1="230" x2="270" y2="230" stroke="#f0a500" stroke-width=".5" opacity=".5"/>
+          <line x1="130" y1="260" x2="210" y2="260" stroke="#f0a500" stroke-width=".5" opacity=".5"/>
+          <text x="200" y="430" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#f0a500" letter-spacing="5" opacity=".8">UMBER</text>
+        </svg>
+      </div>
+      <div class="work-card-inner">
+        <span class="work-tag">Branding · Restaurant</span>
+        <div class="work-name">Umber & Rye</div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="work-card" style="transition-delay:.12s">
+      <div class="work-card-bg" style="background: #080810;">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <line x1="200" y1="60" x2="200" y2="440" stroke="#101030" stroke-width="60"/>
+          <line x1="60" y1="250" x2="340" y2="250" stroke="#101030" stroke-width="60"/>
+          <circle cx="200" cy="250" r="120" fill="none" stroke="#101840" stroke-width="1"/>
+          <circle cx="200" cy="250" r="60" fill="none" stroke="#2030a0" stroke-width="1" opacity=".6"/>
+          <circle cx="200" cy="250" r="6" fill="#4060ff"/>
+          <circle cx="200" cy="130" r="4" fill="#4060ff" opacity=".5"/>
+          <circle cx="320" cy="250" r="4" fill="#4060ff" opacity=".5"/>
+          <circle cx="200" cy="370" r="4" fill="#4060ff" opacity=".5"/>
+          <circle cx="80" cy="250" r="4" fill="#4060ff" opacity=".5"/>
+          <text x="200" y="460" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#4060ff" letter-spacing="5" opacity=".9">AXISLAB</text>
+        </svg>
+      </div>
+      <div class="work-card-inner">
+        <span class="work-tag">Web App · Tech Startup</span>
+        <div class="work-name">AxisLab</div>
+      </div>
+    </div>
+    <!-- Card 6 -->
+    <div class="work-card" style="transition-delay:.2s">
+      <div class="work-card-bg" style="background: #0c0c0c;">
+        <svg width="100%" height="100%" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+          <rect x="100" y="100" width="200" height="300" fill="none" stroke="#222" stroke-width="1"/>
+          <rect x="120" y="120" width="160" height="260" fill="none" stroke="#333" stroke-width=".5"/>
+          <rect x="140" y="200" width="120" height="80" fill="#1a1a1a"/>
+          <line x1="150" y1="230" x2="250" y2="230" stroke="#fff" stroke-width=".5" opacity=".6"/>
+          <line x1="150" y1="250" x2="220" y2="250" stroke="#fff" stroke-width=".5" opacity=".4"/>
+          <circle cx="200" cy="160" r="18" fill="#111" stroke="#444" stroke-width=".5"/>
+          <circle cx="200" cy="160" r="8" fill="#f0a500" opacity=".7"/>
+          <text x="200" y="440" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#888" letter-spacing="5" opacity=".9">STILLFORM</text>
+        </svg>
+      </div>
+      <div class="work-card-inner">
+        <span class="work-tag">E-commerce · Design Studio</span>
+        <div class="work-name">Stillform</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stat reveal">
+    <div class="stat-number">50<span>+</span></div>
+    <div class="stat-label">Projects delivered</div>
+  </div>
+  <div class="stat reveal" style="transition-delay:.15s">
+    <div class="stat-number">7<span>d</span></div>
+    <div class="stat-label">Average turnaround</div>
+  </div>
+  <div class="stat reveal" style="transition-delay:.3s">
+    <div class="stat-number">100<span>%</span></div>
+    <div class="stat-label">Client satisfaction</div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="reveal" style="margin-bottom:4rem">
+    <span class="section-eyebrow">How it works</span>
+    <h2 class="section-headline">From brief<br>to live in days.</h2>
+  </div>
+  <div class="process-item">
+    <div class="process-num">01</div>
+    <div>
+      <div class="process-title">Discovery Call</div>
+      <p class="process-text">30 minutes. We listen first. Understand your business, your competitors, your customers. No templates. No assumptions. We build from what makes you different.</p>
+    </div>
+  </div>
+  <div class="process-item">
+    <div class="process-num">02</div>
+    <div>
+      <div class="process-title">Design Direction</div>
+      <p class="process-text">Within 48 hours, you receive a full design concept — not a wireframe. A real, polished direction with typography, colour, layout, and tone. You respond. We refine.</p>
+    </div>
+  </div>
+  <div class="process-item">
+    <div class="process-num">03</div>
+    <div>
+      <div class="process-title">Build & Launch</div>
+      <p class="process-text">Code is clean, fast, and handoff-ready. We test across devices, optimise for speed, and launch. You get a website that works as hard as you do.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-bg"></div>
+  <div class="reveal">
+    <h2 class="contact-headline">Ready to look<br>premium?</h2>
+    <p class="contact-sub">Tell us your email. We'll take it from there.</p>
+    <div class="contact-email-row">
+      <input type="email" id="email-input" placeholder="your@email.com">
+      <button id="send-btn">Send →</button>
+    </div>
+    <p style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)">Or email directly: <a href="mailto:hello@kosko.studio" style="color:var(--gold);text-decoration:none">hello@kosko.studio</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">KOSKO</div>
+  <div class="footer-copy">© 2025 KOSKO. All rights reserved.</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+let mx = 0, my = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animate(){
+  cx += (mx - cx) * .18;
+  cy += (my - cy) * .18;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
+  requestAnimationFrame(animate);
+})();
+document.querySelectorAll('a,button,input').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+
+// HERO ROTATING RESULTS
+const results = [
+  { number: '€2M', desc: 'store. Built in 9 days.' },
+  { number: '300%', desc: 'more leads. Same product.' },
+  { number: '4.8★', desc: 'avg client rating. Every time.' },
+  { number: '#1', desc: 'in local search. 3 weeks after launch.' },
+  { number: '12x', desc: 'more inquiries. First month.' },
+];
+let ri = 0;
+const rn = document.getElementById('result-number');
+const rd = document.getElementById('result-desc');
+const rl = document.getElementById('result-line');
+function showResult(i) {
+  rl.style.opacity = '0';
+  setTimeout(() => {
+    rn.textContent = results[i].number;
+    rd.textContent = results[i].desc;
+    rl.style.opacity = '1';
+  }, 400);
+}
+setTimeout(() => {
+  showResult(0);
+  setInterval(() => { ri = (ri + 1) % results.length; showResult(ri); }, 3200);
+}, 800);
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: .12 });
+reveals.forEach(r => obs.observe(r));
+
+// PROCESS ITEMS
+const pItems = document.querySelectorAll('.process-item');
+const pObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => { if(e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), i * 100); pObs.unobserve(e.target); } });
+}, { threshold: .15 });
+pItems.forEach(p => pObs.observe(p));
+
+// GRADER
+const verdicts = {
+  design: [
+    { max: 40, cls: 'bad', text: 'Looks like 2012 called. Poor hierarchy, inconsistent typography, no visual identity. Visitors leave in under 3 seconds.' },
+    { max: 65, cls: 'ok', text: 'Functional but forgettable. There\'s a baseline, but nothing to make someone stop and trust you.' },
+    { max: 85, cls: 'ok', text: 'Solid foundations. Some strong choices, but it lacks the polish that converts browsers into buyers.' },
+    { max: 100, cls: 'good', text: 'Excellent. Clean hierarchy, strong identity, visual confidence. You look like you mean business.' },
+  ],
+  speed: [
+    { max: 40, cls: 'bad', text: 'Dangerously slow. 53% of users abandon after 3 seconds. You\'re losing customers before they arrive.' },
+    { max: 65, cls: 'ok', text: 'Below average. Google is penalising you in search rankings right now because of this.' },
+    { max: 85, cls: 'ok', text: 'Acceptable, not exceptional. Room to gain a meaningful SEO and UX edge with optimisation.' },
+    { max: 100, cls: 'good', text: 'Fast and clean. Your site respects users\' time. Google rewards you for it.' },
+  ],
+  mobile: [
+    { max: 40, cls: 'bad', text: 'Broken on mobile. 70% of your traffic is on phones. You are actively turning away the majority of visitors.' },
+    { max: 65, cls: 'ok', text: 'Works, but awkward. Pinching, scrolling, squinting. Not the experience that builds trust.' },
+    { max: 85, cls: 'ok', text: 'Mostly good. A few friction points on smaller screens that cost you conversions.' },
+    { max: 100, cls: 'good', text: 'Seamless mobile experience. Layouts adapt beautifully. Users flow through without thinking.' },
+  ],
+  brand: [
+    { max: 40, cls: 'bad', text: 'No brand presence. Generic fonts, stock imagery, inconsistent voice. Looks like everyone else. Trusted by no one.' },
+    { max: 65, cls: 'ok', text: 'Some identity, no character. You\'re distinguishable, but not memorable. Customers can\'t describe you to others.' },
+    { max: 85, cls: 'ok', text: 'Clear brand, missing edge. Strong direction, but it hasn\'t fully separated you from competitors yet.' },
+    { max: 100, cls: 'good', text: 'Distinct and ownable. Your brand is confident, consistent, and impossible to confuse with anyone else.' },
+  ],
+};
+
+function getVerdict(score, type) {
+  const list = verdicts[type];
+  for (let v of list) { if (score <= v.max) return v; }
+  return list[list.length-1];
+}
+
+function animateScore(el, target, cls) {
+  let current = 0;
+  el.className = 'score-number';
+  const step = () => {
+    current = Math.min(current + Math.ceil((target - current) / 8 + 1), target);
+    el.textContent = current;
+    if (current < target) requestAnimationFrame(step);
+    else { el.classList.add(cls); }
+  };
+  requestAnimationFrame(step);
+}
+
+document.getElementById('grade-btn').addEventListener('click', runGrader);
+document.getElementById('url-input').addEventListener('keydown', e => { if(e.key==='Enter') runGrader(); });
+
+function runGrader() {
+  const url = document.getElementById('url-input').value.trim();
+  if (!url) { document.getElementById('url-input').focus(); return; }
+
+  const btn = document.getElementById('grade-btn');
+  btn.innerHTML = 'Analysing <span class="loading-dots"><span></span><span></span><span></span></span>';
+  btn.disabled = true;
+
+  // Simulate analysis: generate scores with a bias toward showing issues
+  setTimeout(() => {
+    const design = Math.floor(Math.random() * 60) + 18;
+    const speed  = Math.floor(Math.random() * 60) + 15;
+    const mobile = Math.floor(Math.random() * 65) + 20;
+    const brand  = Math.floor(Math.random() * 55) + 12;
+    const overall = Math.round((design + speed + mobile + brand) / 4);
+
+    btn.innerHTML = 'Analyse &nbsp;→';
+    btn.disabled = false;
+
+    const results = document.getElementById('grader-results');
+    results.classList.add('visible');
+    results.style.display = 'block';
+
+    setTimeout(() => {
+      const cards = ['design','speed','mobile','brand'];
+      const scores = [design,speed,mobile,brand];
+      cards.forEach((c, i) => {
+        setTimeout(() => {
+          const el = document.getElementById('score-' + c);
+          const verd = getVerdict(scores[i], c);
+          document.getElementById('verdict-' + c).textContent = verd.text;
+          animateScore(el, scores[i], verd.cls);
+          const card = document.getElementById('card-' + c);
+          card.style.setProperty('--pct', scores[i] + '%');
+          setTimeout(() => card.classList.add('animated'), 100);
+        }, i * 220);
+      });
+
+      setTimeout(() => {
+        const overallEl = document.getElementById('overall-score');
+        let overallCls = overall < 45 ? 'bad' : overall < 70 ? 'ok' : 'good';
+        overallEl.className = 'overall-big ' + overallCls;
+        animateScore(overallEl, overall, overallCls);
+
+        const verdicts2 = overall < 45
+          ? { v: 'This is costing you business.', t: `A score of ${overall}/100 means your website is actively repelling the customers you\'re working to attract. Every day it stays this way is revenue you\'re not making.` }
+          : overall < 70
+          ? { v: 'You\'re leaving money on the table.', t: `At ${overall}/100, your website is doing some things right — but the gaps are real, and your competitors are filling them. This is fixable, fast.` }
+          : { v: 'Solid foundation. Let\'s sharpen it.', t: `${overall}/100 is respectable. But in competitive markets, "good" isn\'t enough. Let\'s push this to exceptional.` };
+
+        document.getElementById('overall-verdict').textContent = verdicts2.v;
+        document.getElementById('overall-text').textContent = verdicts2.t;
+
+        document.getElementById('grade-cta-text').innerHTML =
+          `<strong>We fix all four in one project.</strong> Design, speed, mobile, brand — rebuilt to convert. Most clients see results within the first month.`;
+
+        results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 1200);
+    }, 100);
+  }, 2200);
+}
+
+// SEND EMAIL
+document.getElementById('send-btn').addEventListener('click', () => {
+  const email = document.getElementById('email-input').value.trim();
+  if(!email || !email.includes('@')) { document.getElementById('email-input').focus(); return; }
+  document.getElementById('send-btn').textContent = 'Sent ✓';
+  document.getElementById('send-btn').style.background = '#3a7a30';
+  document.getElementById('email-input').value = '';
+  setTimeout(() => {
+    document.getElementById('send-btn').textContent = 'Send →';
+    document.getElementById('send-btn').style.background = 'var(--gold)';
+  }, 3000);
+});
+</script>
+</body>
+</html>
